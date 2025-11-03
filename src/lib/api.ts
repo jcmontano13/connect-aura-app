@@ -61,6 +61,8 @@ class ApiClient {
     const validatedData = loginSchema.parse(credentials);
 
     try {
+        console.log("Headers:", this.getHeaders());
+
       const response = await fetch(`${API_BASE_URL}/login/`, {
         method: 'POST',
         headers: { 
@@ -165,6 +167,8 @@ class ApiClient {
   async createChatRoom(name: string): Promise<ChatRoom> {
     // Validate input
     const validatedName = roomNameSchema.parse(name);
+    console.log("Creating chat room with:", { name: validatedName });
+    console.log("Request headers:", this.getHeaders());
 
     try {
       const response = await fetch(`${API_BASE_URL}/chat_rooms/`, {
@@ -174,6 +178,15 @@ class ApiClient {
         credentials: 'omit',
         body: JSON.stringify({ name: validatedName }),
       });
+
+        const responseText = await response.text();
+        console.error("Raw response text:", responseText);
+        try {
+          const errorData = JSON.parse(responseText);
+          throw new Error(errorData.message || errorData.detail || 'Failed to create chat room');
+        } catch {
+          throw new Error('Failed to create chat room');
+        }
 
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
