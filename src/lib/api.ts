@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const API_BASE_URL = 'https://message-app-backend-t3-2025-seven.vercel.app/api';
+const API_BASE_URL = 'http://3.107.20.130:8000/api';
 
 export interface LoginCredentials {
   username: string;
